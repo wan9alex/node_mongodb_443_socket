@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors=require('cors');
+var cookieSession = require('cookie-session');
 
 var app = express();
 
@@ -23,6 +24,13 @@ app.use(cors({
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE", //被允许的提交方式
   "allowedHeaders":['Content-Type','Authorization']//被允许的post方式的请求头
 })); 
+
+app.use(cookieSession({
+  keys:['aa','bb'],
+  name:'node_id',
+  maxAge:1000*60*60
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 //管理端
