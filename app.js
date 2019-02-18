@@ -22,6 +22,7 @@ app.use('/admin/home', require('./routes/admin/home'));
 //客户端
 app.use('/api/product', require('./routes/api/product'));
 app.use('/api/detail', require('./routes/api/detail'));
+app.use('/api/slider', require('./routes/api/slider'));
 
 //代理
 app.use('/proxy/top250', require('./routes/proxy/top250'));
