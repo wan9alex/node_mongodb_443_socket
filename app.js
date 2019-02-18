@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors=require('cors');
 
 var app = express();
 
@@ -14,6 +15,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+//配置cors中间件
+app.use(cors({
+  "origin": ["http://localhost:8001","http://localhost:3000","http://localhost:8080","*"],  //允许所有前端域名
+  "credentials":true,//允许携带凭证
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE", //被允许的提交方式
+  "allowedHeaders":['Content-Type','Authorization']//被允许的post方式的请求头
+})); 
 app.use(express.static(path.join(__dirname, 'public')));
 
 //管理端
