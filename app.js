@@ -31,10 +31,20 @@ app.use(cookieSession({
   maxAge:1000*60*60
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/template')));
+
+//给静态资源条件虚拟目录admin,
+//views模板里面的/指向public/admin,加上管理端的响应正好是app.use('/admin/xx)
+//所以ejs里面的/ 或者 ./ 或者 ../../都指向了public/admin
+app.use('/admin',express.static(path.join(__dirname, 'public/admin/')));
 
 //管理端
 app.use('/admin/home', require('./routes/admin/home'));
+app.use('/admin/charts', require('./routes/admin/charts'));
+app.use('/admin/forms', require('./routes/admin/forms'));
+app.use('/admin/login', require('./routes/admin/login'));
+app.use('/admin/reg', require('./routes/admin/reg'));
+app.use('/admin/tables', require('./routes/admin/tables'));
 
 //客户端
 app.use('/api/product', require('./routes/api/product'));
