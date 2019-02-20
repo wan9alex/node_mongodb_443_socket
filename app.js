@@ -39,10 +39,12 @@ app.use(express.static(path.join(__dirname, 'public/template')));
 app.use('/admin',express.static(path.join(__dirname, 'public/admin/')));
 
 //管理端
+app.use('/admin', require('./routes/admin/home'));
 app.use('/admin/home', require('./routes/admin/home'));
 app.use('/admin/charts', require('./routes/admin/charts'));
 app.use('/admin/forms', require('./routes/admin/forms'));
 app.use('/admin/login', require('./routes/admin/login'));
+app.use('/admin/logout', require('./routes/admin/logout'));
 app.use('/admin/reg', require('./routes/admin/reg'));
 app.use('/admin/tables', require('./routes/admin/tables'));
 
