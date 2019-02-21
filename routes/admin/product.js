@@ -3,16 +3,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  // console.log('home1',req.session)
-  res.render('home', { 
-    home: 'active',
-    product:'',
+  console.log('product.........')
+  res.render('product', { 
+    home: '',
+    product:'active',
     user:'',
     charts:'',
     forms:'',
     username:req.session.username,
     icon:req.session.icon,
-    page_header:'首页'
+    page_header:'商品'
   });
 });
 

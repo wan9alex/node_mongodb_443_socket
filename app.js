@@ -40,15 +40,17 @@ app.use('/admin',express.static(path.join(__dirname, 'public/admin/')));
 
 //管理端
 app.use('/admin/reg', require('./routes/admin/reg'));
+app.use('/admin/login', require('./routes/admin/login'));
+app.use('/admin/error', require('./routes/admin/error'));
+app.use('/admin/success', require('./routes/admin/success'));
 app.all('/admin/*',require('./routes/admin/islogin'));//all后面要的是函数，不是路由
 app.use('/admin', require('./routes/admin/home'));
 app.use('/admin/home', require('./routes/admin/home'));
+app.use('/admin/product', require('./routes/admin/product'));
 app.use('/admin/charts', require('./routes/admin/charts'));
 app.use('/admin/forms', require('./routes/admin/forms'));
-app.use('/admin/login', require('./routes/admin/login'));
 app.use('/admin/logout', require('./routes/admin/logout'));
-
-app.use('/admin/tables', require('./routes/admin/tables'));
+app.use('/admin/user', require('./routes/admin/user'));
 
 //客户端
 app.use('/api/product', require('./routes/api/product'));
@@ -74,7 +76,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error',{msg:'app检测错误'});
 });
 
 module.exports = app;
