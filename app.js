@@ -76,7 +76,8 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error',{msg:'app检测错误'});
+  res.render('app_error');
+  // res.redirect('/admin/error?msg=app检测到的错误，木有这个页面');//建议保留脚手架error.ejs模板，可得知错误来源
 });
 
 module.exports = app;

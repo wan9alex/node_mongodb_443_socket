@@ -1,9 +1,9 @@
 
 module.exports = (opts,callback)=>{
 
-  opts = opts||{}
+  opts = opts||{};
   opts.url=opts.url||'mongodb://localhost:27017';
-  
+  var ObjectId = require('mongodb').ObjectId
   
   const MongoClient = require('mongodb').MongoClient;//创建连接实例
 
@@ -13,8 +13,8 @@ module.exports = (opts,callback)=>{
 
     const collection = db.collection(opts.collection); //连接集合
     
-    callback(collection,client)
+    callback(collection,client,ObjectId)
 
   })
 
-}
+};
