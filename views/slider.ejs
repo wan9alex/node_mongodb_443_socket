@@ -12,27 +12,27 @@
   </div>
   <!-- Sidebar Navidation Menus--><span class="heading">导航</span>
   <ul class="list-unstyled">
-    <li class="<%= active=='index'?'active':'' %>"><a href="/admin/home "> <i class="icon-home "></i>首页 </a></li>
+    <li class="<%= dataName=='index'?'active':'' %>"><a href="/admin/home "> <i class="icon-home "></i>首页 </a></li>
     <li>
         <a href="#exampledropdownDropdown1" aria-expanded="false" data-toggle="collapse"> <i
           class="icon-interface-windows"></i>商品 </a>
       <ul id="exampledropdownDropdown1" class="collapse list-unstyled ">
-        <li class="<%= active=='home'?'active':'' %>"><a href="/admin/product?dataName=home">主屏</a></li>
-        <li class="<%= active=='follow'?'active':'' %>"><a href="/admin/product?dataName=follow">关注</a></li>
-        <li class="<%= active=='column'?'active':'' %>"><a href="/admin/product?dataName=column">栏目</a></li>
+        <li class="<%= dataName=='home'?'active':'' %>"><a href="/admin/product?dataName=home&start=1">主屏</a></li>
+        <li class="<%= dataName=='follow'?'active':'' %>"><a href="/admin/product?dataName=follow&start=1">关注</a></li>
+        <li class="<%= dataName=='column'?'active':'' %>"><a href="/admin/product?dataName=column&start=1">栏目</a></li>
       </ul>
     </li>
     <li>
       <a href="#exampledropdownDropdown2" aria-expanded="false" data-toggle="collapse"> <i
           class="icon-picture"></i>人员管理 </a>
       <ul id="exampledropdownDropdown2" class="collapse list-unstyled ">
-        <li class="<%= active=='user'?'active':'' %>"><a href="/admin/user">用户端</a></li>
-        <li class="<%= active=='admin'?'active':'' %>"><a href="/admin/user/admin">管理端</a></li>
+        <li class="<%= dataName=='user'?'active':'' %>"><a href="/admin/user">用户端</a></li>
+        <li class="<%= dataName=='admin'?'active':'' %>"><a href="/admin/user/super">管理端</a></li>
       </ul>
     </li>
-    <li class="<%= active=='charts'?'active':'' %>"><a href="/admin/charts"> <i class="fa fa-bar-chart"></i>Charts </a>
+    <li class="<%= dataName=='charts'?'active':'' %>"><a href="/admin/charts"> <i class="fa fa-bar-chart"></i>Charts </a>
     </li>
-    <li class="<%= active=='forms'?'active':'' %>"><a href="/admin/forms"> <i class="icon-padnote"></i>表单 </a></li>
+    <li class="<%= dataName=='forms'?'active':'' %>"><a href="/admin/forms"> <i class="icon-padnote"></i>表单 </a></li>
     <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i
           class="icon-interface-windows"></i>下拉 </a>
       <ul id="exampledropdownDropdown" class="collapse list-unstyled ">

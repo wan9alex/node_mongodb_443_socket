@@ -5,12 +5,20 @@ var mgd = require('../../common/mgd');
 router.get('/', function(req, res, next) {
 
   let dataName = req.query.dataName||'home';
-  let start = req.query.start-1||0;//后端默认 start=0/count=3
-  let count = req.query.count-0||3;
+  
+  let start = req.query.start ? req.query.start-1 : require('../../common/global').page_start-1;//后端默认 start=0/count=3
+  let count = req.query.count ? req.query.count-0 : require('../../common/global').page_num;
+  let q = req.query.q||'';
+  let rule = req.query.rule||'';
+
   let common_data = {
-    active:dataName,
+    dataName:dataName,//当前激活页
     ...res.user_session,
-    page_header:dataName,
+    page_header:dataName,//标题
+    start:start+1,
+    q:q,
+    rule:rule,
+    count:count
   };
   mgd(
     {
@@ -19,31 +27,32 @@ router.get('/', function(req, res, next) {
     },
     (collection,client)=>{
 
-      collection.find({},{
-        limit:count,
-        skip:start*count,
+      collection.find(
+        q ? {title: eval('/'+ q +'/g') } : {},{
+        // limit:count,
+        // skip:start*count,
         projection:{
           _id:1,title:1,des:1
-        }
+        },
+        sort:rule ? {[rule]:1} : {}
       }).toArray((err,result)=>{
+        let checkResult=result.slice(start*count,start*count+count)//提取要分页的数据
         res.data={
           ...common_data,
-          page_data:result,
-        };
-        next();
-        /* res.render('product', {
-          ...common_data,
-          page_data:result,
-        });
-        client.close(); */
+          page_data:checkResult,
+          page_count:Math.ceil(result.length/count)//计算总页数
+        }
+        res.render('product', res.data);
+        client.close();
       })
     }
   );
 });
-
+/* 
 router.get('/', function(req, res, next) {
 
   let dataName = req.query.dataName||'home';
+  let count = req.query.count ? req.query.count-0 : require('../../common/global').page_num;
 
   mgd(
     {
@@ -53,34 +62,26 @@ router.get('/', function(req, res, next) {
     (collection,client)=>{
 
       //获取表的长度
-      collection.count((err,num)=>{
-        console.log('count........',err,num)
-        console.log('count........',res.data)
+      collection.countDocuments((err,num)=>{
+        // console.log('count........',err,num)
+        // console.log('count........',res.data)
         res.data={
           ...res.data,
-          page_count:num,
+          page_count:Math.ceil(num/count)//计算总页数
         }
-        console.log('count......',res.data)
+        // console.log('count......',res.data)
        
         res.render('product', res.data);
         client.close();
-        
       })
-      /* collection.find({}).toArray((err,result)=>{
-        res.render('product', {
-          ...res.data,
-          page_count:result.length,
-        });
-        client.close();
-      }) */
     }
   );
-});
+}); */
 
 /*router.get('/follow', function(req, res, next) {
   console.log('follow.........')
   res.render('product', {
-    active:'product/follow',
+    dataName:'product/follow',
     username:req.session.username,
     icon:req.session.icon,
     page_header:'关注'
@@ -90,7 +91,7 @@ router.get('/', function(req, res, next) {
 router.get('/column', function(req, res, next) {
   console.log('column.........')
   res.render('product', {
-    active:'product/collumn',
+    dataName:'product/collumn',
     username:req.session.username,
     icon:req.session.icon,
     page_header:'栏目'

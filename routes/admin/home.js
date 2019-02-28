@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   // console.log('home1',req.session)
   res.render('home', {
-    active: 'index',
+    dataName : 'index',
     username:req.session.username,
     icon:req.session.icon,
     page_header:'首页'

@@ -52,15 +52,14 @@
                                 <script>
                                   search_btn.onclick=function(){
                                     var search_input=document.getElementById('search_input');
-                                    alert(search_input.value)
-                                    location.href = '/admin/product/search?dataName=<%= active %>&q='+search_input.value
+                                    location.href = '/admin/product?dataName=<%=dataName%>&q='+search_input.value+'&start=<%=start%>&count=<%=count%>&rule=<%=rule%>';
                                   }
                                 </script>
                               </div>
                             </div>
                           </div> 
                         </div>
-                        <div class="col-2"><a  class="btn btn-info" href="/admin/product/add?dataName=<%=active%>" role="button">添加</a></div>
+                        <div class="col-2"><a  class="btn btn-info" href="/admin/product/add?dataName=<%=dataName%>" role="button">添加</a></div>
                         <div class="col-2">
                           <div class="dropdown show">
                             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -68,8 +67,8 @@
                             </a>
                           
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                              <a class="dropdown-item" href="/admin/product/sort?dataName=<%=active%>&rule=_id">id</a>
-                              <a class="dropdown-item" href="/admin/product/sort?dataName=<%=active%>&rule=time">发布时间</a>
+                              <a class="dropdown-item" href="/admin/product?dataName=<%=dataName%>&rule=_id&start=<%=start%>&count=<%=count%>&q=<%=q%>">id</a>
+                              <a class="dropdown-item" href="/admin/product?dataName=<%=dataName%>&rule=time&start=<%=start%>&count=<%=count%>&q=<%=q%>">发布时间</a>
                             </div>
                           </div>
                         </div>
@@ -91,8 +90,8 @@
                               <th scope="row"><%= page_data[i]._id %></th>
                               <td> <%= page_data[i].title %></td>
                               <td>
-                                <a name="" id="" class="btn btn-danger small" href="<%= '/admin/product/del?dataName='+ active + '&_id='+page_data[i]._id %>" role="button">删除</a>
-                                <a name="" id="" class="btn btn-dark small" href="<%= '/admin/product/check?dataName='+ active + '&_id='+page_data[i]._id %>" role="button">修改</a>
+                                <a name="" id="" class="btn btn-danger small" href="<%= '/admin/product/del?dataName='+ dataName + '&_id='+page_data[i]._id %>" role="button">删除</a>
+                                <a name="" id="" class="btn btn-dark small" href="<%= '/admin/product/check?dataName='+ dataName + '&_id='+page_data[i]._id %>" role="button">修改</a>
                               </td>
                             </tr>
                             <% } %>
@@ -106,23 +105,29 @@
                         </table>
                       </div>
                     </div>
+                    <% if(page_data.length!=0){ %>
                     <div class="card-footer">
                       <nav aria-label="...">
                           <ul class="pagination small">
-                            <li class="page-item disabled">
-                              <a class="page-link" href="#" tabindex="-1">上一页</a>
+                            
+                            <li class="page-item <%= start==1 ? 'disabled' : '' %>">
+                              <a class="page-link" href="/admin/product?dataName=<%=dataName%>&start=<%=start%>&count=<%=count%>&q=<%%>&rule=_id">上一页</a>
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item active">
-                              <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                            
+                            <% for(var i=1; i<=page_count; i++){ %>
+                            <li class="page-item <%= start==i ? 'active' : '' %>">
+                              <a class="page-link" href="<%= '/admin/product?dataName=' + dataName + '&start=' + i + '&q=' + q + '&rule=' + rule %>"><%= i %></a>
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                              <a class="page-link" href="#">下一页</a>
+                            <% } %>
+
+                            <li class="page-item <%= start==page_count ? 'disabled' : '' %>"">
+                              <a class="page-link" href="<%= '/admin/product?dataName=' + dataName + '&start=' + (start+1) + '&q=' + q + '&rule=' + rule %>">下一页</a>
                             </li>
+                            
                           </ul>
                         </nav>
                     </div>
+                    <% } %>
                   </div>
                 </div>
               </div>
