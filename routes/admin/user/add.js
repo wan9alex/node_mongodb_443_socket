@@ -18,40 +18,39 @@ router.get('/',function(req, res, next) {
     rule:''
   };
 
-  res.render('./product/add.ejs', common_data);
+  res.render('./user/add.ejs', common_data);
 });
 
 router.post('/submit',(req,res,next)=>{
   // console.log('1111111111',req.body);
   // console.log('2222222222',req.files);
   // res.send();
-  let {title,des,auth,content,dataName} = req.body;//拆除body数据
+  let {username,password,follow,fans,nikename,dataName} = req.body;//拆除body数据
   let time=Date.now();//创建服务器上传时间
 
   //multer拆出上传图片,需要解决没有上传头像
-  let auth_icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
-  console.log(title,des,auth,content,auth_icon);
-  if(auth_icon){
+  icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
+  // console.log(icon);
+  if(icon){
     fs.renameSync(
       req.files[0].path,
       req.files[0].path+pathLib.parse(req.files[0].originalname).ext
     )
   }else{
-    auth_icon = '/admin/fileinput/images/noimage.png';
+    icon = '/admin/fileinput/images/noimage.png';
   }
 
   mgd(
     {
-      dbName:'newsapp',
       collection:dataName
     },
     (collection,client)=>{
       collection.insertOne(
-        {title,des,detail:{auth,content,auth_icon,time}}
+        {username,password,follow,fans,nikename,icon,time}
         ,
         (err,result)=>{
           if(!err && result.result.n){
-            res.send('/admin/product?dataName='+dataName+'&start=1')
+            res.send('/admin/user?dataName='+dataName+'&start=1')
           }else{
             res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
           }

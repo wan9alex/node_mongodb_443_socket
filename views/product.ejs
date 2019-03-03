@@ -42,37 +42,7 @@
                 <div class="col-lg-12">
                   <div class="card">
                     <div class="card-header d-flex align-items-center">
-                      <div class="row">
-                        <div class="col-8">
-                          <div class="form-group">
-                            <div class="input-group">
-                              <input id="search_input" type="text" class="form-control ">
-                              <div class="input-group-append">
-                                <button id="search_btn" type="button" class="btn btn-primary ">搜索</button>
-                                <script>
-                                  search_btn.onclick=function(){
-                                    var search_input=document.getElementById('search_input');
-                                    location.href = '/admin/product?dataName=<%=dataName%>&q='+search_input.value+'&start=<%=start%>&count=<%=count%>&rule=<%=rule%>';
-                                  }
-                                </script>
-                              </div>
-                            </div>
-                          </div> 
-                        </div>
-                        <div class="col-2"><a  class="btn btn-info" href="/admin/product/add?dataName=<%=dataName%>" role="button">添加</a></div>
-                        <div class="col-2">
-                          <div class="dropdown show">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              排序
-                            </a>
-                          
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                              <a class="dropdown-item" href="/admin/product?dataName=<%=dataName%>&rule=_id&start=<%=start%>&count=<%=count%>&q=<%=q%>">id</a>
-                              <a class="dropdown-item" href="/admin/product?dataName=<%=dataName%>&rule=time&start=<%=start%>&count=<%=count%>&q=<%=q%>">发布时间</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <% include ./toolbar.ejs %>
                     </div>
                     <div class="card-body">
                       <div class="table-responsive">
@@ -90,8 +60,8 @@
                               <th scope="row"><%= page_data[i]._id %></th>
                               <td> <%= page_data[i].title %></td>
                               <td>
-                                <a name="" id="" class="btn btn-danger small" href="<%= '/admin/product/del?dataName='+ dataName + '&_id='+page_data[i]._id %>" role="button">删除</a>
-                                <a name="" id="" class="btn btn-dark small" href="<%= '/admin/product/check?dataName='+ dataName + '&_id='+page_data[i]._id %>" role="button">修改</a>
+                                <a name="" id="" class="btn btn-danger small" href="<%= '/admin/' + api_name + '/del?dataName=' + dataName + '&start=' + start + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id + '&count=' + count  %>" role="button">删除</a>
+                                <a name="" id="" class="btn btn-dark small" href="<%= '/admin/' + api_name + '/check?dataName=' + dataName + '&start=' + start + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id + '&count=' + count  %>" role="button">修改</a>
                               </td>
                             </tr>
                             <% } %>
@@ -105,29 +75,9 @@
                         </table>
                       </div>
                     </div>
-                    <% if(page_data.length!=0){ %>
                     <div class="card-footer">
-                      <nav aria-label="...">
-                          <ul class="pagination small">
-                            
-                            <li class="page-item <%= start==1 ? 'disabled' : '' %>">
-                              <a class="page-link" href="/admin/product?dataName=<%=dataName%>&start=<%=start%>&count=<%=count%>&q=<%%>&rule=_id">上一页</a>
-                            </li>
-                            
-                            <% for(var i=1; i<=page_count; i++){ %>
-                            <li class="page-item <%= start==i ? 'active' : '' %>">
-                              <a class="page-link" href="<%= '/admin/product?dataName=' + dataName + '&start=' + i + '&q=' + q + '&rule=' + rule %>"><%= i %></a>
-                            </li>
-                            <% } %>
-
-                            <li class="page-item <%= start==page_count ? 'disabled' : '' %>"">
-                              <a class="page-link" href="<%= '/admin/product?dataName=' + dataName + '&start=' + (start+1) + '&q=' + q + '&rule=' + rule %>">下一页</a>
-                            </li>
-                            
-                          </ul>
-                        </nav>
+                      <% include ./paging.ejs %>
                     </div>
-                    <% } %>
                   </div>
                 </div>
               </div>

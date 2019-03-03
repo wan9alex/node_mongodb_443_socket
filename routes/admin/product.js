@@ -11,18 +11,19 @@ router.get('/', function(req, res, next) {
   let q = req.query.q||'';
   let rule = req.query.rule||'';
 
+  //页面数据
   let common_data = {
     dataName:dataName,//当前激活页
-    ...res.user_session,
+    ...res.user_session,//cookie每次需要校验
     page_header:dataName,//标题
     start:start+1,
     q:q,
     rule:rule,
-    count:count
+    count:count,
+    api_name:'product'
   };
   mgd(
     {
-      dbName:'newsapp',
       collection:dataName
     },
     (collection,client)=>{
@@ -34,7 +35,7 @@ router.get('/', function(req, res, next) {
         projection:{
           _id:1,title:1,des:1
         },
-        sort:rule ? {[rule]:1} : {}
+        sort:rule ? {[rule]:-1} : {'detail.time':-1}
       }).toArray((err,result)=>{
         let checkResult=result.slice(start*count,start*count+count)//提取要分页的数据
         res.data={
@@ -101,8 +102,8 @@ router.get('/column', function(req, res, next) {
 router.use('/add', require('./product/add'));//use 指向中间件|路由|函数  get，post, all指向函数
 router.use('/del', require('./product/del'));
 router.use('/check',  require('./product/check'));
-router.use('/search', require('./product/search'));
-router.use('/sort', require('./product/sort'));
+// router.use('/search', require('./product/search'));
+// router.use('/sort', require('./product/sort'));
 
 
 

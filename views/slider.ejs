@@ -22,17 +22,8 @@
         <li class="<%= dataName=='column'?'active':'' %>"><a href="/admin/product?dataName=column&start=1">栏目</a></li>
       </ul>
     </li>
-    <li>
-      <a href="#exampledropdownDropdown2" aria-expanded="false" data-toggle="collapse"> <i
-          class="icon-picture"></i>人员管理 </a>
-      <ul id="exampledropdownDropdown2" class="collapse list-unstyled ">
-        <li class="<%= dataName=='user'?'active':'' %>"><a href="/admin/user">用户端</a></li>
-        <li class="<%= dataName=='admin'?'active':'' %>"><a href="/admin/user/super">管理端</a></li>
-      </ul>
+    <li class="<%= dataName=='user'?'active':'' %>"><a href="/admin/user?dataName=user&start=1"> <i class="fa icon-picture"></i>用户 </a>
     </li>
-    <li class="<%= dataName=='charts'?'active':'' %>"><a href="/admin/charts"> <i class="fa fa-bar-chart"></i>Charts </a>
-    </li>
-    <li class="<%= dataName=='forms'?'active':'' %>"><a href="/admin/forms"> <i class="icon-padnote"></i>表单 </a></li>
     <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i
           class="icon-interface-windows"></i>下拉 </a>
       <ul id="exampledropdownDropdown" class="collapse list-unstyled ">

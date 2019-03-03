@@ -8,9 +8,8 @@ router.get('/', function(req, res, next) {
 router.post('/submit', function(req, res, next) {
   let username=req.body.username;//取的前端的name
   let password=req.body.password;
-  // console.log(1,req.body,username,password)
+  console.log(1,req.body,username,password)
   mgd({
-    dbName:'newsapp',
     collection:'admin'
   },(collection,client)=>{
     console.log(1.5,collection)

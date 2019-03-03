@@ -3,6 +3,7 @@ module.exports = (opts,callback)=>{
 
   opts = opts||{};
   opts.url=opts.url||'mongodb://localhost:27017';
+  opts.dbName=opts.dbName||'newsapp';
   var ObjectId = require('mongodb').ObjectId
   
   const MongoClient = require('mongodb').MongoClient;//创建连接实例
