@@ -3,15 +3,15 @@ var router = express.Router();
 var mgd = require('../../../common/mgd')
 var pathLib = require('path')
 var fs = require('fs');
-var uploadUrl = '/upload/';
+var uploadUrl = require('../../../config/global').upload.product;
 
 router.get('/',function(req, res, next) {
   let dataName=req.query.dataName;
   let _id=req.query._id;
-  let start=req.query.start||require('../../../common/global').page_start
-  let q=req.query.q||require('../../../common/global').q;
-  let rule=req.query.rule||require('../../../common/global').rule;
-  let count=req.query.count||require('../../../common/global').page_num;
+  let start=req.query.start||require('../../../config/global').page_start
+  let q=req.query.q||require('../../../config/global').q;
+  let rule=req.query.rule||require('../../../config/global').rule;
+  let count=req.query.count||require('../../../config/global').page_num;
 
   //页面数据
   let common_data = {
@@ -47,9 +47,6 @@ router.get('/',function(req, res, next) {
 
 
 router.post('/submit',(req,res,next)=>{
-  // console.log('1111111111',req.body);
-  console.log('00000000000',req.files);
-  // res.send();
   let {title,des,auth,content,dataName,auth_icon_old,_id,start,q,count,rule} = req.body;//拆除body数据
   // let check_time_last=Date.now();//创建服务器上传时间
 
@@ -64,7 +61,6 @@ router.post('/submit',(req,res,next)=>{
   }else{
     auth_icon = auth_icon_old//没有修改过用之前的
   }
-  console.log('22222222222',auth_icon)
 
   mgd(
     {

@@ -3,7 +3,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('success', { msg: req.query.msg });
+  // console.log('error...........',req.query)
+  res.render('./feedback/error', { msg: req.query.msg });
 });
 
 module.exports = router;

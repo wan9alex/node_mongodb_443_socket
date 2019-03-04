@@ -6,8 +6,8 @@ router.get('/', function(req, res, next) {
 
   let dataName = req.query.dataName||'home';
   
-  let start = req.query.start ? req.query.start-1 : require('../../common/global').page_start-1;//后端默认 start=0/count=3
-  let count = req.query.count ? req.query.count-0 : require('../../common/global').page_num;
+  let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
+  let count = req.query.count ? req.query.count-0 : require('../../config/global').page_num;
   let q = req.query.q||'';
   let rule = req.query.rule||'';
 

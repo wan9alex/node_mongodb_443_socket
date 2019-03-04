@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 const pathLib=require('path');
-let uploadUrl='/upload/';//上传路径
+let uploadUrl=require('../../../config/global').upload.user;//上传路径
 let mgd = require('../../../common/mgd');
 
 router.get('/',function(req, res, next) {
@@ -22,14 +22,13 @@ router.get('/',function(req, res, next) {
 });
 
 router.post('/submit',(req,res,next)=>{
-  // console.log('1111111111',req.body);
   // console.log('2222222222',req.files);
   // res.send();
   let {username,password,follow,fans,nikename,dataName} = req.body;//拆除body数据
   let time=Date.now();//创建服务器上传时间
 
   //multer拆出上传图片,需要解决没有上传头像
-  icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
+  let icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
   // console.log(icon);
   if(icon){
     fs.renameSync(

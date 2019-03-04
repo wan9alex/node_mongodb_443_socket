@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var mgd = require('../../common/mgd');
-
+/* GET home page. */
 router.get('/', function(req, res, next) {
+
   let dataName = req.query.dataName;
   
   let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
@@ -19,20 +20,22 @@ router.get('/', function(req, res, next) {
     q:q,
     rule:rule,
     count:count,
-    api_name:'user'
+    api_name:'banner'
   };
-
   mgd(
     {
       collection:dataName
     },
     (collection,client)=>{
+
       collection.find(
-        q ? {nikename: eval('/'+ q +'/g') } : {},{
+        q ? {title: eval('/'+ q +'/g') } : {},{
+        // limit:count,
+        // skip:start*count,
         projection:{
-          _id:1,nikename:1,follow:1,icon:1,time:1
+          _id:1,title:1,des:1
         },
-        sort:rule ? {[rule]:-1} : {'time':-1}
+        sort:rule ? {[rule]:-1} : {'detail.time':-1}
       }).toArray((err,result)=>{
         let checkResult=result.slice(start*count,start*count+count)//提取要分页的数据
         res.data={
@@ -40,16 +43,15 @@ router.get('/', function(req, res, next) {
           page_data:checkResult,
           page_count:Math.ceil(result.length/count)//计算总页数
         }
-        res.render('user', res.data);
+        res.render('banner', res.data);
         client.close();
       })
     }
   );
 });
 
-router.use('/add', require('./user/add'));//use 指向中间件|路由|函数  get，post, all指向函数
-router.use('/del', require('./user/del'));
-router.use('/check',  require('./user/check'));
-
+router.use('/add', require('./banner/add'));//use 指向中间件|路由|函数  get，post, all指向函数
+router.use('/del', require('./banner/del'));
+router.use('/check',  require('./banner/check'));
 
 module.exports = router;

@@ -42,7 +42,6 @@ router.post('/submit',(req,res,next)=>{
 
   mgd(
     {
-      dbName:'newsapp',
       collection:dataName
     },
     (collection,client)=>{

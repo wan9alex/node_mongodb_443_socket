@@ -31,19 +31,19 @@
 <body>
   <div class="page">
     <!-- Main Navbar-->
-    <% include ./header.ejs %>
+    <% include common/header.ejs %>
     <div class="page-content d-flex align-items-stretch">
       <!-- Side Navbar -->
-      <% include ./slider.ejs %>
+      <% include common/slider.ejs %>
       <div class="content-inner">
         <!-- Page Header-->
         <!-- Breadcrumb-->
-        <% include ./crumb.ejs %>
+        <% include common/crumb.ejs %>
         <section class="projects no-padding-top">
           <div class="container-fluid">
             <!-- Project-->
             <div class="project">
-              <% include ./toolbar.ejs %>
+              <% include common/toolbar.ejs %>
             </div>
             <!-- Project-->
             <% for(var i=0;i<page_data.length;i++){ %>
@@ -84,12 +84,12 @@
             <% } %>
             
             <div class="project">
-              <% include ./paging.ejs %>
+              <% include common/paging.ejs %>
             </div>
           </div>
         </section>
         <!-- Page Footer-->
-        <% include ./footer.ejs %>
+        <% include common/footer.ejs %>
       </div>
     </div>
   </div>

@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var mgd = require('../../../common/mgd')
-var uploadUrl = require('../../../config/global').upload.user;
-var pathLib = require('path');
+var pathLib = require('path')
 var fs = require('fs');
+var uploadUrl = require('../../../config/global').upload.product;
 
 router.get('/',function(req, res, next) {
   let dataName=req.query.dataName;
@@ -21,6 +21,7 @@ router.get('/',function(req, res, next) {
     _id,start,q,rule,count
   };
   
+
   mgd({
     collection:dataName
   },(collection,client,ObjectId)=>{
@@ -28,11 +29,12 @@ router.get('/',function(req, res, next) {
       _id:ObjectId(_id)
     }).toArray((err,result)=>{
       if(!err){
+        console.log(2.5,result)
         res.data={
           ...common_data,
           page_data:result[0]
         }
-        res.render('./user/check.ejs', res.data);
+        res.render('./banner/check.ejs', res.data);
       }else{
         res.redirect('/admin/error?error=1&msg='+dataName+'集合链接有误');
       }
@@ -45,20 +47,20 @@ router.get('/',function(req, res, next) {
 
 
 router.post('/submit',(req,res,next)=>{
-  let {username,password,nikename,follow,fans,dataName,icon_old,_id,start,q,count,rule} = req.body;//拆除body数据
+  let {title,des,auth,content,dataName,auth_icon_old,_id,start,q,count,rule} = req.body;//拆除body数据
+  // let check_time_last=Date.now();//创建服务器上传时间
 
   //multer拆出上传图片,需要解决没有修改过的头像
-  console.log('1........',req.files)
-  let icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
-  if(icon){
+  let auth_icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
+  console.log('111111111',auth_icon);
+  if(auth_icon){
     fs.renameSync(
       req.files[0].path,
-      req.files[0].path + pathLib.parse(req.files[0].originalname).ext
+      req.files[0].path+pathLib.parse(req.files[0].originalname).ext
     )
   }else{
-    icon = icon_old//没有修改过用之前的
+    auth_icon = auth_icon_old//没有修改过用之前的
   }
-
 
   mgd(
     {
@@ -68,10 +70,10 @@ router.post('/submit',(req,res,next)=>{
       //updateOne({条件},{更新后},(err,res)=>{})
       collection.updateOne(
         {_id:ObjectId(_id)},
-        {$set:{username,password,nikename,follow,fans,icon}},
+        {$set:{title,des,detail:{auth,content,auth_icon}}},
         (err,result)=>{
           if(!err && result.result.n){
-            res.send('/admin/user?dataName='+dataName+'&start='+start+'&q='+q+'&rule='+rule+'&count='+count)
+            res.send('/admin/banner?dataName='+dataName+'&start='+start+'&q='+q+'&rule='+rule+'&count='+count)
           }else{
             res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
           }

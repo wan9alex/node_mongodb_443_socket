@@ -34,8 +34,19 @@ app.use(cookieSession({
   // maxAge:1000*60*60
 }));
 
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    if(req.url.indexOf('product')!==-1){//根据请求地址的不同
+      cb(null, path.join(__dirname, 'public',require('./config/global').upload.product));//public/product
+    }
+    if(req.url.indexOf('user')!==-1){
+      cb(null, path.join(__dirname, 'public',require('./config/global').upload.user))
+    }
+  }
+})
 
-let objMulter = multer({ dest: path.join(__dirname, 'public/upload')});	//实例化  返回 multer对象
+var objMulter = multer({ storage });//存储方式dest指定死了，storage分目录
+// let objMulter = multer({ dest: path.join(__dirname, 'public/upload')});	//实例化  返回 multer对象
 app.use(objMulter.any());  	//any 允许上传任何文件
 
 app.use(express.static(path.join(__dirname, 'public/template')));
@@ -49,14 +60,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 //管理端
 app.use('/admin/reg', require('./routes/admin/reg'));
 app.use('/admin/login', require('./routes/admin/login'));
-app.use('/admin/error', require('./routes/admin/error'));
-app.use('/admin/success', require('./routes/admin/success'));
+app.use('/admin/error', require('./routes/admin/feedback/error'));
+app.use('/admin/success', require('./routes/admin/feedback/success'));
+
 app.all('/admin/*',require('./routes/admin/islogin'));//all后面要的是函数，不是路由
+
 app.use('/admin', require('./routes/admin/home'));
 app.use('/admin/home', require('./routes/admin/home'));
 app.use('/admin/product', require('./routes/admin/product'));
-// app.use('/admin/charts', require('./routes/admin/charts'));
-// app.use('/admin/forms', require('./routes/admin/forms'));
+app.use('/admin/banner', require('./routes/admin/banner'));
 app.use('/admin/logout', require('./routes/admin/logout'));
 app.use('/admin/user', require('./routes/admin/user'));
 
@@ -84,7 +96,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('app_error');
+  res.render('./feedback/app_error');
   // res.redirect('/admin/error?msg=app检测到的错误，木有这个页面');//建议保留脚手架error.ejs模板，可得知错误来源
 });
 

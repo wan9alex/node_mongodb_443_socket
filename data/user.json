@@ -1,2 +1,0 @@
-{ "_id" : { "$oid" : "5c66f1638dc06242f0737f34" }, "username" : "alex", "password" : "alex123", "icon" : "http://uncle9.top/assets/images/head.png", "follow" : 300, "fans" : 230 }
-{ "_id" : { "$oid" : "5c66f1638dc06242f0737f35" }, "username" : "ppp", "password" : "ppp123", "follow" : 0 }

@@ -6,7 +6,7 @@
 
 var app = require('../app');
 var debug = require('debug')('node-https:server');
-var config = require('../config');
+var config = require('../config/server');
 var fs = require('fs');
 
 var http,port,server;

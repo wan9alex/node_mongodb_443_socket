@@ -18,7 +18,6 @@ router.get('/',function(req, res, next) {
     q,rule,count,dataName
   };
 
-
   mgd(
     {
       collection:common_data.dataName
@@ -26,9 +25,9 @@ router.get('/',function(req, res, next) {
     (collection,client,ObjectId)=>{
 
       collection.deleteOne({_id:ObjectId(_id)},(err,result)=>{
-        // console.log('del..............',result)
+        console.log('del..............',result)
         if(!err && result.result.n){
-          res.redirect('/admin/user?dataName='+common_data.dataName+'&q='+common_data.q+'&start='+common_data.start+'&count='+common_data.count+'&rule='+common_data.rule)
+          res.redirect('/admin/banner?dataName='+common_data.dataName+'&q='+common_data.q+'&start='+common_data.start+'&count='+common_data.count+'&rule='+common_data.rule)
         }else{
           res.redirect('/admin/error?msg=删除操作失败')
         }

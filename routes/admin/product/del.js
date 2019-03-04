@@ -4,8 +4,8 @@ var mgd = require('../../../common/mgd');
 
 router.get('/',function(req, res, next) {
   let _id = req.query._id||'';
-  let start = req.query.start ? req.query.start-1 : require('../../../common/global').page_start-1;//后端默认 start=0/count=3
-  let count = req.query.count ? req.query.count-0 : require('../../../common/global').page_num;
+  let start = req.query.start ? req.query.start-1 : require('../../../config/global').page_start-1;//后端默认 start=0/count=3
+  let count = req.query.count ? req.query.count-0 : require('../../../config/global').page_num;
   let dataName = req.query.dataName
   let rule = req.query.rule||'';
   let q = req.query.q||'';
@@ -17,8 +17,6 @@ router.get('/',function(req, res, next) {
     start:start+1,
     q,rule,count,dataName
   };
-
-  console.log('11111111',common_data.dataName)
 
   mgd(
     {
