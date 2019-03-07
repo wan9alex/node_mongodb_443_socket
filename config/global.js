@@ -1,10 +1,11 @@
 module.exports={
   page_num:3,
   page_start:1,
-  rule:'detail.time',
+  rule:'',
   q:'',
   upload:{
     product:'/upload/product/',
-    user:'/upload/user/'
+    user:'/upload/user/',
+    banner:'/upload/banner/',
   }
 }

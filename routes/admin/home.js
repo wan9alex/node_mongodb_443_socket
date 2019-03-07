@@ -6,8 +6,7 @@ router.get('/', function(req, res, next) {
   // console.log('home1',req.session)
   res.render('home', {
     dataName : 'index',
-    username:req.session.username,
-    icon:req.session.icon,
+    ...res.user_session,
     page_header:'首页'
   });
 });

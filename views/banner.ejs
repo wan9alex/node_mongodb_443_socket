@@ -49,16 +49,16 @@
                         <table class="table">
                           <thead>
                             <tr>
-                              <th>#</th>
                               <th>标题</th>
+                              <th>副标</th>
                               <th>操作</th>
                             </tr>
                           </thead>
                           <tbody>
                             <% for(var i=0;i<page_data.length;i++){ %>
                             <tr>
-                              <th scope="row"><%= page_data[i]._id %></th>
-                              <td> <%= page_data[i].title %></td>
+                              <th scope="row"><%= page_data[i].title %></th>
+                              <td> <%= page_data[i].sub_title %></td>
                               <td>
                                 <a name="" id="" class="btn btn-danger small" href="<%= '/admin/' + api_name + '/del?dataName=' + dataName + '&start=' + start + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id + '&count=' + count  %>" role="button">删除</a>
                                 <a name="" id="" class="btn btn-dark small" href="<%= '/admin/' + api_name + '/check?dataName=' + dataName + '&start=' + start + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id + '&count=' + count  %>" role="button">修改</a>

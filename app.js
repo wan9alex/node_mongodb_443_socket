@@ -42,6 +42,9 @@ var storage = multer.diskStorage({
     if(req.url.indexOf('user')!==-1){
       cb(null, path.join(__dirname, 'public',require('./config/global').upload.user))
     }
+    if(req.url.indexOf('banner')!==-1){
+      cb(null, path.join(__dirname, 'public',require('./config/global').upload.banner))
+    }
   }
 })
 

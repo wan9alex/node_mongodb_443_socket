@@ -35,6 +35,10 @@
             <a class="dropdown-item" href="/admin/<%= api_name %>?dataName=<%=dataName%>&rule=username&start=<%=start%>&count=<%=count%>&q=<%=q%>">用户名</a>
             <a class="dropdown-item" href="/admin/<%= api_name %>?dataName=<%=dataName%>&rule=time&start=<%=start%>&count=<%=count%>&q=<%=q%>">注册时间</a>
           <% } %>
+          <% if(api_name=='banner'){ %>
+            <a class="dropdown-item" href="/admin/<%= api_name %>?dataName=<%=dataName%>&rule=title&start=<%=start%>&count=<%=count%>&q=<%=q%>">标题</a>
+            <a class="dropdown-item" href="/admin/<%= api_name %>?dataName=<%=dataName%>&rule=time&start=<%=start%>&count=<%=count%>&q=<%=q%>">提交时间</a>
+          <% } %>
         </div>
       </div>
     </div>

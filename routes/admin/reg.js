@@ -12,11 +12,8 @@ router.post('/submit', function(req, res, next) {
   mgd({
     collection:'admin'
   },(collection,client)=>{
-    console.log(1.5,collection)
     collection.find({username},{_id:0}).toArray((err,result)=>{
-      console.log(2,err,result)
       if(!err){
-        // console.log(2.5,result)
         if(result.length>0){
           res.redirect('/admin/error?error=1&msg=用户名已存在');//跳转到错误页面，会开启静态托管指向的admin虚拟路径
         }else{
@@ -30,8 +27,6 @@ router.post('/submit', function(req, res, next) {
             }
             client.close();
           })
-         
-          
         }
       }else{
         res.redirect('/admin/error?error=1&msg=admin集合链接有误');

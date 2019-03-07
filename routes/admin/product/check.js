@@ -8,6 +8,10 @@ var uploadUrl = require('../../../config/global').upload.product;
 router.get('/',function(req, res, next) {
   let dataName=req.query.dataName;
   let _id=req.query._id;
+  if(!_id || !dataName){
+    res.redirect('/admin/error?msg=_id和dataName为必传参数')
+    return;
+  }
   let start=req.query.start||require('../../../config/global').page_start
   let q=req.query.q||require('../../../config/global').q;
   let rule=req.query.rule||require('../../../config/global').rule;
@@ -29,7 +33,6 @@ router.get('/',function(req, res, next) {
       _id:ObjectId(_id)
     }).toArray((err,result)=>{
       if(!err){
-        console.log(2.5,result)
         res.data={
           ...common_data,
           page_data:result[0]

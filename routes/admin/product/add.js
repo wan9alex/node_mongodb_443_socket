@@ -7,7 +7,10 @@ let mgd = require('../../../common/mgd');
 
 router.get('/',function(req, res, next) {
   let dataName=req.query.dataName;
-
+  if(!dataName){
+    res.redirect('/admin/error?msg=dataName为必传单数')
+    return;
+  }
   //页面数据
   let common_data = {
     dataName:dataName,//当前激活页
@@ -22,15 +25,11 @@ router.get('/',function(req, res, next) {
 });
 
 router.post('/submit',(req,res,next)=>{
-  // console.log('1111111111',req.body);
-  // console.log('2222222222',req.files);
-  // res.send();
   let {title,des,auth,content,dataName} = req.body;//拆除body数据
   let time=Date.now();//创建服务器上传时间
 
   //multer拆出上传图片,需要解决没有上传头像
   let auth_icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
-  console.log(title,des,auth,content,auth_icon);
   if(auth_icon){
     fs.renameSync(
       req.files[0].path,

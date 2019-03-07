@@ -7,7 +7,10 @@ let mgd = require('../../../common/mgd');
 
 router.get('/',function(req, res, next) {
   let dataName=req.query.dataName;
-
+  if(!dataName){
+    res.redirect('/admin/error?msg=dataName为必传单数')
+    return;
+  }
   //页面数据
   let common_data = {
     dataName:dataName,//当前激活页
@@ -39,6 +42,7 @@ router.post('/submit',(req,res,next)=>{
     icon = '/admin/fileinput/images/noimage.png';
   }
 
+  //需要先判断用户是否存在ing。。。。。。。
   mgd(
     {
       collection:dataName

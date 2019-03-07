@@ -5,11 +5,14 @@ var mgd = require('../../common/mgd');
 router.get('/', function(req, res, next) {
 
   let dataName = req.query.dataName;
-  
+  if(!dataName){
+    res.redirect('/admin/error?msg=dataName为必传单数')
+    return;
+  }
   let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
   let count = req.query.count ? req.query.count-0 : require('../../config/global').page_num;
-  let q = req.query.q||'';
-  let rule = req.query.rule||'';
+  let q = req.query.q||require('../../config/global').q;
+  let rule = req.query.rule||require('../../config/global').rule;
 
   //页面数据
   let common_data = {
@@ -17,9 +20,7 @@ router.get('/', function(req, res, next) {
     ...res.user_session,//cookie每次需要校验
     page_header:dataName,//标题
     start:start+1,
-    q:q,
-    rule:rule,
-    count:count,
+    q,rule,count,
     api_name:'banner'
   };
   mgd(
@@ -30,10 +31,8 @@ router.get('/', function(req, res, next) {
 
       collection.find(
         q ? {title: eval('/'+ q +'/g') } : {},{
-        // limit:count,
-        // skip:start*count,
         projection:{
-          _id:1,title:1,des:1
+          _id:1,title:1,sub_title:1
         },
         sort:rule ? {[rule]:-1} : {'detail.time':-1}
       }).toArray((err,result)=>{

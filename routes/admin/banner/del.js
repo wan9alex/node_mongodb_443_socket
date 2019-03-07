@@ -4,11 +4,15 @@ var mgd = require('../../../common/mgd');
 
 router.get('/',function(req, res, next) {
   let _id = req.query._id||'';
+  let dataName = req.query.dataName
+  if(!dataName || !_id){
+    res.redirect('/admin/error?msg=dataName和_id为必传单数')
+    return;
+  }
   let start = req.query.start ? req.query.start-1 : require('../../../config/global').page_start-1;//后端默认 start=0/count=3
   let count = req.query.count ? req.query.count-0 : require('../../../config/global').page_num;
-  let dataName = req.query.dataName
-  let rule = req.query.rule||'';
-  let q = req.query.q||'';
+  let rule = req.query.rule||require('../../../config/global').rule;
+  let q = req.query.q||require('../../../config/global').q;
   // console.log('del..............',_id,req.query.dataName);//接收到的_id是字符，不能与库_id对照,库id是ObjectId对象
   //页面数据
   let common_data = {
@@ -25,7 +29,7 @@ router.get('/',function(req, res, next) {
     (collection,client,ObjectId)=>{
 
       collection.deleteOne({_id:ObjectId(_id)},(err,result)=>{
-        console.log('del..............',result)
+        // console.log('del..............',result)
         if(!err && result.result.n){
           res.redirect('/admin/banner?dataName='+common_data.dataName+'&q='+common_data.q+'&start='+common_data.start+'&count='+common_data.count+'&rule='+common_data.rule)
         }else{
