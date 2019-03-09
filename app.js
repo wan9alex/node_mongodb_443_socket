@@ -31,6 +31,8 @@ app.use(cors({
 app.use(cookieSession({
   keys:['aa','bb'],
   name:'node_id',
+  resave:false,
+  rolling:true
   // maxAge:1000*60*60
 }));
 
@@ -78,7 +80,11 @@ app.use('/admin/user', require('./routes/admin/user'));
 //客户端
 app.use('/api/product', require('./routes/api/product'));
 app.use('/api/detail', require('./routes/api/detail'));
-app.use('/api/slider', require('./routes/api/slider'));
+app.use('/api/banner', require('./routes/api/banner'));
+app.use('/api/login', require('./routes/api/login'));
+app.use('/api/reg', require('./routes/api/reg'));
+app.use('/api/logout', require('./routes/api/logout'));
+app.use('/api/user', require('./routes/api/user'));
 
 //代理
 app.use('/proxy/top250', require('./routes/proxy/top250'));
