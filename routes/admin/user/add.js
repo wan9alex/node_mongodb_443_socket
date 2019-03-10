@@ -48,18 +48,25 @@ router.post('/submit',(req,res,next)=>{
       collection:dataName
     },
     (collection,client)=>{
-      collection.insertOne(
-        {username,password,follow,fans,nikename,icon,time}
-        ,
-        (err,result)=>{
-          if(!err && result.result.n){
-            res.send('/admin/user?dataName='+dataName+'&start=1')
-          }else{
-            res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
-          }
-          client.close();
+      collection.find({username}).toArray((err,result)=>{
+        if(!err && result.length>0){
+          res.send('/admin/error?error=1&msg=用户名已存在')
+        }else{
+          collection.insertOne(
+            {username,password,follow,fans,nikename,icon,time}
+            ,
+            (err,result)=>{
+              if(!err && result.result.n){
+                res.send('/admin/user?dataName='+dataName+'&start=1')
+              }else{
+                res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
+              }
+              client.close();
+            }
+          )
         }
-      )
+      })
+      
     }
   );
   
