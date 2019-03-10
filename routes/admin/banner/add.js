@@ -46,8 +46,8 @@ router.post('/submit',(req,res,next)=>{
     )
   })
   //未传图片处理
-  if(!banner) banner = '/admin/fileinput/images/noimage.png';
-  if(!icon) icon = '/admin/fileinput/images/noimage.png';
+  if(!banner) banner = '/upload/banner/noimage.png';
+  if(!icon) icon = '/upload/banner/noimage.png';
   
 
   mgd(

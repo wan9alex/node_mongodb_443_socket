@@ -39,7 +39,7 @@ router.post('/submit',(req,res,next)=>{
       req.files[0].path+pathLib.parse(req.files[0].originalname).ext
     )
   }else{
-    icon = '/admin/fileinput/images/noimage.png';
+    icon = '/upload/user/noimage.png';
   }
 
   //需要先判断用户是否存在ing。。。。。。。

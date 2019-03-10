@@ -36,7 +36,7 @@ router.post('/submit',(req,res,next)=>{
       req.files[0].path+pathLib.parse(req.files[0].originalname).ext
     )
   }else{
-    auth_icon = '/admin/fileinput/images/noimage.png';
+    auth_icon = '/upload/user/noimage.png';
   }
 
   mgd(
