@@ -1,3 +1,5 @@
 /node_modules
 /data
 /.idea
+/config/server.js
+/template/javascripts/port.js

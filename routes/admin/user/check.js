@@ -6,25 +6,23 @@ var pathLib = require('path');
 var fs = require('fs');
 
 router.get('/',function(req, res, next) {
-  let dataName=req.query.dataName;
-  let _id=req.query._id;
+  let {_id,dataName} = res.params;
 
   if(!_id || !dataName){
     res.redirect('/admin/error?msg=_id和dataName为必传参数')
     return;
   }
   
-  let start=req.query.start||require('../../../config/global').page_start
-  let q=req.query.q||require('../../../config/global').q;
-  let rule=req.query.rule||require('../../../config/global').rule;
-  let count=req.query.count||require('../../../config/global').page_num;
+  // let start=req.query.start||require('../../../config/global').page_start
+  // let q=req.query.q||require('../../../config/global').q;
+  // let rule=req.query.rule||require('../../../config/global').rule;
+  // let count=req.query.count||require('../../../config/global').page_num;
 
   //页面数据
   let common_data = {
-    dataName:dataName,//当前激活页
     ...res.user_session,//cookie每次需要校验
+    ...res.params,
     page_header:dataName + '修改',//标题
-    _id,start,q,rule,count
   };
   
   mgd({
@@ -77,7 +75,7 @@ router.post('/submit',(req,res,next)=>{
         {$set:{username,password,nikename,follow,fans,icon}},
         (err,result)=>{
           if(!err && result.result.n){
-            res.send('/admin/user?dataName='+dataName+'&start='+start+'&q='+q+'&rule='+rule+'&count='+count)
+            res.send('/admin/user?dataName='+dataName+'&start='+(start-0+1)+'&q='+q+'&rule='+rule+'&count='+count)
           }else{
             res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
           }
