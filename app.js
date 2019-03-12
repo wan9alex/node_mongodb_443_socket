@@ -69,6 +69,7 @@ app.use('/admin/error', require('./routes/admin/feedback/error'));
 app.use('/admin/success', require('./routes/admin/feedback/success'));
 
 app.all('/admin/*',require('./routes/admin/islogin'));//all后面要的是函数，不是路由
+app.all('/admin/*',require('./routes/admin/params'));//all后面要的是函数，不是路由
 
 app.use('/admin', require('./routes/admin/home'));
 app.use('/admin/home', require('./routes/admin/home'));

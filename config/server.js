@@ -4,7 +4,7 @@ module.exports={
     port:3000
   },
   http:{
-    open:true,
+    open:false,
     port:80
   },
   https:{

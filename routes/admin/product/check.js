@@ -6,23 +6,22 @@ var fs = require('fs');
 var uploadUrl = require('../../../config/global').upload.product;
 
 router.get('/',function(req, res, next) {
-  let dataName=req.query.dataName;
-  let _id=req.query._id;
+  let {dataName,_id}=res.params;
   if(!_id || !dataName){
     res.redirect('/admin/error?msg=_id和dataName为必传参数')
     return;
   }
-  let start=req.query.start||require('../../../config/global').page_start
+  /* let start=req.query.start||require('../../../config/global').page_start
   let q=req.query.q||require('../../../config/global').q;
   let rule=req.query.rule||require('../../../config/global').rule;
-  let count=req.query.count||require('../../../config/global').page_num;
+  let count=req.query.count||require('../../../config/global').page_num; */
 
   //页面数据
+  
   let common_data = {
-    dataName:dataName,//当前激活页
     ...res.user_session,//cookie每次需要校验
+    ...res.params,
     page_header:dataName + '修改',//标题
-    _id,start,q,rule,count
   };
   
 
@@ -55,7 +54,7 @@ router.post('/submit',(req,res,next)=>{
 
   //multer拆出上传图片,需要解决没有修改过的头像
   let auth_icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
-  console.log('111111111',auth_icon);
+  // console.log('111111111',auth_icon);
   if(auth_icon){
     fs.renameSync(
       req.files[0].path,
@@ -76,7 +75,7 @@ router.post('/submit',(req,res,next)=>{
         {$set:{title,des,detail:{auth,content,auth_icon}}},
         (err,result)=>{
           if(!err && result.result.n){
-            res.send('/admin/product?dataName='+dataName+'&start='+start+'&q='+q+'&rule='+rule+'&count='+count)
+            res.send('/admin/product?dataName='+dataName+'&start='+(start-0+1)+'&q='+q+'&rule='+rule+'&count='+count)
           }else{
             res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
           }

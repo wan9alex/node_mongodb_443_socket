@@ -11,18 +11,17 @@ router.get('/', function(req, res, next) {
     return;
   }
   
-  let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
+  /* let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
   let count = req.query.count ? req.query.count-0 : require('../../config/global').page_num;
   let q = req.query.q||require('../../config/global').q;
-  let rule = req.query.rule||require('../../config/global').rule;
+  let rule = req.query.rule||require('../../config/global').rule; */
 
   //页面数据
+  let {start,count,q,rule}=res.params;
   let common_data = {
-    dataName:dataName,//当前激活页
     ...res.user_session,//cookie每次需要校验
-    page_header:dataName,//标题
+    ...res.params,
     start:start+1,
-    q,rule,count,
     api_name:'product'
   };
   mgd(

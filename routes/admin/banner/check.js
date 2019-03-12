@@ -6,23 +6,17 @@ var fs = require('fs');
 var uploadUrl = require('../../../config/global').upload.banner;
 
 router.get('/',function(req, res, next) {
-  let dataName=req.query.dataName;
-  let _id=req.query._id;
+  let {dataName,_id} = res.params;
   if(!dataName || !_id){
     res.redirect('/admin/error?msg=dataName和_id为必传单数')
     return;
   }
-  let start=req.query.start||require('../../../config/global').page_start
-  let q=req.query.q||require('../../../config/global').q;
-  let rule=req.query.rule||require('../../../config/global').rule;
-  let count=req.query.count||require('../../../config/global').page_num;
 
   //页面数据
   let common_data = {
-    dataName:dataName,//当前激活页
     ...res.user_session,//cookie每次需要校验
+    ...res.params,
     page_header:dataName + '修改',//标题
-    _id,start,q,rule,count
   };
   
 
@@ -85,7 +79,7 @@ router.post('/submit',(req,res,next)=>{
         {$set:{title,des,banner,detail:{auth,content,icon}}},
         (err,result)=>{
           if(!err && result.result.n){
-            res.send('/admin/banner?dataName='+dataName+'&start='+start+'&q='+q+'&rule='+rule+'&count='+count)
+            res.send('/admin/banner?dataName='+dataName+'&start='+(start-0+1)+'&q='+q+'&rule='+rule+'&count='+count)
           }else{
             res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
           }

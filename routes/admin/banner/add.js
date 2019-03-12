@@ -15,12 +15,9 @@ router.get('/',function(req, res, next) {
 
   //页面数据
   let common_data = {
-    dataName:dataName,//当前激活页
     ...res.user_session,//cookie每次需要校验
+    ...res.params,
     page_header:dataName + '添加',//标题
-    start:1,
-    q:'',
-    rule:''
   };
 
   res.render('./banner/add.ejs', common_data);
