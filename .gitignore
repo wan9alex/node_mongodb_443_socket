@@ -1,3 +1,7 @@
 /node_modules
 /data
 /.idea
+/public/upload
+/.gitignore
+/config/server.js
+/template/javascripts/port.js
