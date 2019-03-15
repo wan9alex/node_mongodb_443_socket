@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>群聊</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
 </head>
-
 <body>
-    <h1>群聊--在线人数
-        <span id="s1"></span>
-    </h1>
-    <div style="width: 30%; float: left">
-        输入:
-        <input type="text" id="msginput">
-        <button id="msgbtn">发送</button>
-        <ul id="list">
-        </ul>
-    </div>
-    <div style="width: 65%; float: right" id="showbox">
+  <nav>
+    <a href="/">读取API_被推送</a>
+    <a href="/proxy.html">数据代理</a>
+    <a href="/bbs.html">双向通信</a>
+  </nav>
+  
+  <h1>群聊--在线人数
+      <span id="s1"></span>
+  </h1>
+  <div style="width: 30%; float: left">
+      输入:
+      <input type="text" id="msginput">
+      <button id="msgbtn">发送</button>
+      <ul id="list">
+      </ul>
+  </div>
+  <div style="width: 65%; float: right" id="showbox">
 
-    </div>
-</body>
-<script src="./javascripts/socket.io.js"></script>
-<script src="./javascripts/port.js"></script>  
+  </div>
+
+<script src="./js/socket.io.js"></script>
+<script src="./js/port.js"></script>  
 <script>  
     let socket = io(port);  //连接服务器
+
     let btn = document.getElementById('msgbtn');
     let msginput = document.getElementById('msginput');
     let showbox = document.getElementById('showbox');
@@ -35,7 +42,6 @@
 
 
     socket.on('login', (data) => {  //监听服务器发来的自定义事件
-        // console.log('收到');  
         let message = document.createElement('div');
         message.innerHTML = `${data.username}: ${data.msg}`;  //显示客户端id,和发来的数据
         showbox.appendChild(message);
@@ -80,6 +86,7 @@
         }
 
     });
+
     socket.on('message', (data) => {  //监听服务器发来的自定义事件
         let message = document.createElement('div');
         message.innerHTML = `${data.username}: ${data.msg}`;  //显示客户端id,和发来的数据
@@ -91,5 +98,5 @@
         showbox.appendChild(message);
     })  
 </script>
-
+</body>
 </html>

@@ -3,7 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 const pathLib=require('path');
 let uploadUrl=require('../../../config/global').upload.banner;//上传路径
-let mgd = require('../../../common/mgd');
+let mgdb = require('../../../common/mgdb');
 
 router.get('/',function(req, res, next) {
   let dataName=req.query.dataName;
@@ -24,7 +24,7 @@ router.get('/',function(req, res, next) {
 });
 
 router.post('/submit',(req,res,next)=>{
-  let {dataName} = req.body;//拆除body数据
+  let {dataName,content,title,sub_title,auth} = req.body;//拆除body数据
   let time=Date.now();//创建服务器上传时间
 
   //multer多图片循环，找到
@@ -43,17 +43,18 @@ router.post('/submit',(req,res,next)=>{
     )
   })
   //未传图片处理
-  if(!banner) banner = '/upload/banner/noimage.png';
-  if(!icon) icon = '/upload/banner/noimage.png';
+  if(!banner) banner = '/upload/noimage.png';
+  if(!icon) icon = '/upload/noimage.png';
   
 
-  mgd(
+  mgdb(
     {
       collection:dataName
     },
-    (collection,client)=>{
+    ({collection,client})=>{
+      // console.log({...req.body,banner,detail:{...req.body.detail,time,icon}})
       collection.insertOne(
-        {...req.body,banner,detail:{...req.body.detail,time,icon}}
+        {title,sub_title,banner,time,detail:{icon,auth,content}}
         ,
         (err,result)=>{
           if(!err && result.result.n){

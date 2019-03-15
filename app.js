@@ -3,10 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors=require('cors');
+
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser')
 let multer  = require('multer');	//引入
+let cors = require('cors');
 
 var app = express();
 
@@ -19,20 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser());
-
-//配置cors中间件
-app.use(cors({
-  "origin": ["http://localhost:8001","http://localhost:3000","http://127.0.0.1:8080","https://localhost:8001","https://localhost:3000","https://127.0.0.1:8080"],  //允许所有前端域名
-  "credentials":true,//允许携带凭证
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE", //被允许的提交方式
-  "allowedHeaders":['Content-Type','Authorization']//被允许的post方式的请求头
-})); 
-
 app.use(cookieSession({
   keys:['aa','bb'],
   name:'node_id',
-  resave:false,
-  rolling:true
   // maxAge:1000*60*60
 }));
 
@@ -50,10 +40,18 @@ var storage = multer.diskStorage({
   }
 })
 
-var objMulter = multer({ storage });//存储方式dest指定死了，storage分目录
+var upload = multer({ storage });//存储方式dest指定死了，storage分目录
 // let objMulter = multer({ dest: path.join(__dirname, 'public/upload')});	//实例化  返回 multer对象
-app.use(objMulter.any());  	//any 允许上传任何文件
+app.use(upload.any());  	//any 允许上传任何文件
 
+app.use(cors({
+ "origin": ["http://127.0.0.1:8001","http://localhost:8001","http://127.0.0.1:8054","http://10.11.62.248:5000","http://localhost:5000"],  //允许所有前端域名
+  "credentials":true,//允许携带凭证
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE", //被允许的提交方式
+  "allowedHeaders":['Content-Type','Authorization']//被允许的post方式的请求头
+})); 
+
+//资源托管
 app.use(express.static(path.join(__dirname, 'public/template')));
 
 //给静态资源条件虚拟目录admin,
@@ -62,36 +60,36 @@ app.use(express.static(path.join(__dirname, 'public/template')));
 app.use('/admin',express.static(path.join(__dirname, 'public/admin/')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//管理端
-app.use('/admin/reg', require('./routes/admin/reg'));
+//管理端响应
 app.use('/admin/login', require('./routes/admin/login'));
-app.use('/admin/error', require('./routes/admin/feedback/error'));
 app.use('/admin/success', require('./routes/admin/feedback/success'));
+app.use('/admin/error', require('./routes/admin/feedback/error'));
+app.use('/admin/logout', require('./routes/admin/logout'));
 
-app.all('/admin/*',require('./routes/admin/islogin'));//all后面要的是函数，不是路由
-app.all('/admin/*',require('./routes/admin/params'));//all后面要的是函数，不是路由
+app.all('/admin/*',require('./routes/admin/islogin'))
 
 app.use('/admin', require('./routes/admin/home'));
 app.use('/admin/home', require('./routes/admin/home'));
 app.use('/admin/product', require('./routes/admin/product'));
 app.use('/admin/banner', require('./routes/admin/banner'));
-app.use('/admin/logout', require('./routes/admin/logout'));
 app.use('/admin/user', require('./routes/admin/user'));
 
-//客户端
+//用户端响应api
+app.all('/api/*',require('./routes/api/params'))
+
 app.use('/api/product', require('./routes/api/product'));
-app.use('/api/detail', require('./routes/api/detail'));
 app.use('/api/banner', require('./routes/api/banner'));
+app.use('/api/detail', require('./routes/api/detail'));
 app.use('/api/login', require('./routes/api/login'));
-app.use('/api/reg', require('./routes/api/reg'));
-app.use('/api/logout', require('./routes/api/logout'));
 app.use('/api/user', require('./routes/api/user'));
+app.use('/api/logout', require('./routes/api/logout'));
+app.use('/api/reg', require('./routes/api/reg'));
 
-//代理
+
+//代理端的响应
 app.use('/proxy/top250', require('./routes/proxy/top250'));
-app.use('/proxy/coming_soon', require('./routes/proxy/coming_soon'));
-app.use('/proxy/in_theaters', require('./routes/proxy/in_theaters'));
-
+app.use('/proxy/coming', require('./routes/proxy/coming_soon'));
+app.use('/proxy/theaters', require('./routes/proxy/in_theaters'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -106,8 +104,12 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('./feedback/app_error');
-  // res.redirect('/admin/error?msg=app检测到的错误，木有这个页面');//建议保留脚手架error.ejs模板，可得知错误来源
+  if(req.url.indexOf('/api') !== -1){
+    res.send({error:1,msg:'错误的接口和请求方式'})
+  }else{
+    res.render('./feedback/app_error');
+  }
+  
 });
 
 module.exports = app;

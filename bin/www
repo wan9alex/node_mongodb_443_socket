@@ -5,8 +5,9 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('node-https:server');
-var config = require('../config/server');
+var debug = require('debug')('step1:server');
+
+var config = require('../config/server')
 var fs = require('fs');
 
 var http,port,server;
@@ -24,28 +25,38 @@ if(config.local.open){
   var options = {
     key: fs.readFileSync('./bin/1826016_uncle9.top.key'),
     cert: fs.readFileSync('./bin/1826016_uncle9.top.pem'),
-  }; 
+  };
   server = http.createServer(options,app);
 }
 
-var io = require('socket.io')(server);//创建socket实例,socket服务
+/**
+ * Get port from environment and store in Express.
+ */
 
-require('../sockets/listen')(io);//socket监听
-
-
+app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
 
-/* 
-const options = {
-  key: fs.readFileSync('./bin/1826016_uncle9.top.key'),
-  cert: fs.readFileSync('./bin/1826016_uncle9.top.pem'),
-}; 
-var server = https.createServer(options,app);
- */
+
+//SOCKET.IO配置
+const SOCKETIO = require('socket.io');//创建实例
+const io = SOCKETIO.listen(server);//监听http实例，未来3000端口下的http请求，会触发socket
+
+
+//实现聊天室
+require('../sockets/bbs')(io);//socket监听
+
+
+
+
+// const io = require('socket.io').listen(server);
+// const io = require('socket.io')(server);
+
+// setInterval(()=>io.emit('update_product', {data:'数据'}),2000)
+
 /**
  * Listen on provided port, on all network interfaces.
  */

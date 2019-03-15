@@ -3,7 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 const pathLib=require('path');
 let uploadUrl=require('../../../config/global').upload.user;//上传路径
-let mgd = require('../../../common/mgd');
+let mgdb = require('../../../common/mgdb');
 
 router.get('/',function(req, res, next) {
   let dataName=req.query.dataName;
@@ -13,12 +13,9 @@ router.get('/',function(req, res, next) {
   }
   //页面数据
   let common_data = {
-    dataName:dataName,//当前激活页
     ...res.user_session,//cookie每次需要校验
+    ...res.params,
     page_header:dataName + '添加',//标题
-    start:1,
-    q:'',
-    rule:''
   };
 
   res.render('./user/add.ejs', common_data);
@@ -39,15 +36,15 @@ router.post('/submit',(req,res,next)=>{
       req.files[0].path+pathLib.parse(req.files[0].originalname).ext
     )
   }else{
-    icon = '/upload/user/noimage.png';
+    icon = '/upload/noimage.png';
   }
 
   //需要先判断用户是否存在ing。。。。。。。
-  mgd(
+  mgdb(
     {
       collection:dataName
     },
-    (collection,client)=>{
+    ({collection,client})=>{
       collection.find({username}).toArray((err,result)=>{
         if(!err && result.length>0){
           res.send('/admin/error?error=1&msg=用户名已存在')

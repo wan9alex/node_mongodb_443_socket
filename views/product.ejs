@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Bootstrap Material Admin by Bootstrapious.com</title>
+    <title>node 管理后台</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="all,follow">
@@ -28,21 +28,19 @@
   <body>
     <div class="page">
       <!-- Main Navbar-->
-      <% include common/header.ejs %>
+      <% include ./common/header.ejs %>
       <div class="page-content d-flex align-items-stretch"> 
         <!-- Side Navbar -->
-        <% include common/slider.ejs %>
+        <% include ./common/slider.ejs %>
         <div class="content-inner">
-          <!-- Page Header-->
-          <!-- Breadcrumb-->
-          <% include common/crumb.ejs %>
+          <% include ./common/crumb.ejs %>
           <section class="tables">   
             <div class="container-fluid">
               <div class="row">
                 <div class="col-lg-12">
                   <div class="card">
                     <div class="card-header d-flex align-items-center">
-                      <% include common/toolbar.ejs %>
+                      <% include ./common/toolbar.ejs %>
                     </div>
                     <div class="card-body">
                       <div class="table-responsive">
@@ -58,25 +56,26 @@
                             <% for(var i=0;i<page_data.length;i++){ %>
                             <tr>
                               <th scope="row"><%= page_data[i]._id %></th>
-                              <td> <%= page_data[i].title %></td>
+                              <td><%= page_data[i].title %></td>
                               <td>
-                                <a name="" id="" class="btn btn-danger small" href="<%= '/admin/' + api_name + '/del?dataName=' + dataName + '&start=' + start + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id + '&count=' + count  %>" role="button">删除</a>
-                                <a name="" id="" class="btn btn-dark small" href="<%= '/admin/' + api_name + '/check?dataName=' + dataName + '&start=' + start + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id + '&count=' + count  %>" role="button">修改</a>
+                                <a name="" id="" class="btn btn-danger small" href="<%= '/admin/product/del?dataName=' + dataName + '&start=' + start + '&count=' + count + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id %>">删除</a>
+                                <a name="" id="" class="btn btn-dark small" href="<%= '/admin/product/check?dataName=' + dataName + '&start=' + start + '&count=' + count + '&q=' + q + '&rule=' + rule + '&_id=' + page_data[i]._id %>" role="button">修改</a>
                               </td>
                             </tr>
                             <% } %>
-
-                            <% if (page_data.length==0) {%>
+                            
+                            <% if(page_data.length==0){ %>
                             <tr>
                               <td colspan="3"><span class="badge badge-dark">无数据</span></td>
                             </tr>
-                            <% }%>
+                            <% } %>
+                            
                           </tbody>
                         </table>
                       </div>
                     </div>
                     <div class="card-footer">
-                      <% include common/paging.ejs %>
+                      <% include ./common/paging.ejs %>
                     </div>
                   </div>
                 </div>
@@ -84,7 +83,7 @@
             </div>
           </section>
           <!-- Page Footer-->
-          <% include common/footer.ejs %>
+          <% include ./common/footer.ejs %>
         </div>
       </div>
     </div>
@@ -92,9 +91,11 @@
     <script src="/admin/vendor/jquery/jquery.min.js"></script>
     <script src="/admin/vendor/popper.js/umd/popper.min.js"> </script>
     <script src="/admin/vendor/bootstrap/js/bootstrap.min.js"></script>
+    
     <script src="/admin/vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="/admin/vendor/chart.js/Chart.min.js"></script>
-    <script src="/admin/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <!-- <script src="/admin/vendor/chart.js/Chart.min.js"></script> -->
+    <!-- <script src="/admin/vendor/jquery-validation/jquery.validate.min.js"></script> -->
+
     <!-- Main File-->
     <script src="/admin/js/front.js"></script>
   </body>

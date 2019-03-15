@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var mgd = require('../../../common/mgd')
+var mgdb = require('../../../common/mgdb')
 var pathLib = require('path')
 var fs = require('fs');
 var uploadUrl = require('../../../config/global').upload.banner;
@@ -20,14 +20,13 @@ router.get('/',function(req, res, next) {
   };
   
 
-  mgd({
+  mgdb({
     collection:dataName
-  },(collection,client,ObjectId)=>{
+  },({collection,client,ObjectID})=>{
     collection.find({
-      _id:ObjectId(_id)
+      _id:ObjectID(_id)
     }).toArray((err,result)=>{
       if(!err){
-        // console.log(2.5,result)
         res.data={
           ...common_data,
           page_data:result[0]
@@ -45,7 +44,8 @@ router.get('/',function(req, res, next) {
 
 
 router.post('/submit',(req,res,next)=>{
-  let {title,des,auth,content,dataName,banner_old,icon_old,_id,start,q,count,rule} = req.body;//拆除body数据
+  
+  let {title,sub_title,auth,content,dataName,banner_old,icon_old,_id,start,q,count,rule}=req.body;
   // let check_time_last=Date.now();//创建服务器上传时间
 
   //multer拆出上传图片,需要解决没有修改过的头像
@@ -68,15 +68,15 @@ router.post('/submit',(req,res,next)=>{
   if(!banner) banner = banner_old;
   if(!icon) icon = icon_old;
 
-  mgd(
+  mgdb(
     {
       collection:dataName
     },
-    (collection,client,ObjectId)=>{
+    ({collection,client,ObjectID})=>{
       //updateOne({条件},{更新后},(err,res)=>{})
       collection.updateOne(
-        {_id:ObjectId(_id)},
-        {$set:{title,des,banner,detail:{auth,content,icon}}},
+        {_id:ObjectID(_id)},
+        {$set:{title,sub_title,banner,detail:{icon,auth,content}}},
         (err,result)=>{
           if(!err && result.result.n){
             res.send('/admin/banner?dataName='+dataName+'&start='+(start-0+1)+'&q='+q+'&rule='+rule+'&count='+count)

@@ -1,48 +1,40 @@
 var express = require('express');
 var router = express.Router();
-var mgd = require('../../common/mgd');
+var mgdb = require('../../common/mgdb')
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
 
-  //参数整理
-  let dataName = req.query.dataName
-  if(!dataName) {
-    res.send({error:1,msg:'dataName为必传参数'});
+  let {dataName,q,rule,start,count} = res.params;
+  if (!dataName) {
+    res.send({error:1,msg:'dataName为必传参数'})
     return;
   }
-  
-  let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
-  let count = req.query.count ? req.query.count-0 : require('../../config/global').page_num;
-  let q = req.query.q||require('../../config/global').q;
-  let rule = req.query.rule||require('../../config/global').rule;
 
-  mgd(
-    {
-      collection:dataName
-    },
-    (collection,client)=>{
 
-      collection.find(
-        q ? {title: eval('/'+ q +'/g') } : {},{
-        sort:rule ? {[rule]:-1} : {'detail.time':-1},
-        projection:{
-          _id:1,title:1,des:1
-        }
-      }).toArray((err,result)=>{
-        let checkResult=result.slice(start*count,start*count+count)//提取要分页的数据
-        res.data={
-          error:0,
-          msg:'成功',
-          count:Math.ceil(result.length/count),//计算总页数
-          total:result.length,
-          result:checkResult
-        }
-        res.send(res.data);
-        client.close();
-      })
-    }
-  );
+  mgdb({
+    collection: dataName
+  }, ({ collection, client }) => {
+    collection.find(
+      q ? { title: eval('/' + q + '/g') } : {},
+      {
+        projection: {
+          _id: 1, title: 1, des:1
+        },
+        sort: rule ? { [rule]: -1 } : { 'time': -1 } //排序条件默认按时间排序
+      }
+    ).toArray((err, result) => {
+      let checkResult = result.slice(start * count, start * count + count)//提取要分页的数据
+      let data = {
+        total:result.length,
+        start:start+1,count,
+        page_count: Math.ceil(result.length / count),//计算总页数
+        page_data: checkResult,
+      }
+      res.send({error:0,msg:'成功',...data});
+      client.close();
+    })
+  })
+
 });
-
 
 module.exports = router;

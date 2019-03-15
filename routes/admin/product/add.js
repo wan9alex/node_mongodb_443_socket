@@ -1,65 +1,76 @@
 var express = require('express');
 var router = express.Router();
+var pathLib = require('path')
+var uploadUrl = require('../../../config/global').upload.product
 var fs = require('fs');
-const pathLib=require('path');
-let uploadUrl=require('../../../config/global').upload.product;//上传路径
-let mgd = require('../../../common/mgd');
+var mgdb = require('../../../common/mgdb')
 
-router.get('/',function(req, res, next) {
-  let dataName=req.query.dataName;
+router.get('/', function(req, res, next) {
+
+  //1.必传参数
+  let dataName = req.query.dataName;
   if(!dataName){
-    res.redirect('/admin/error?msg=dataName为必传单数')
+    res.redirect('/admin/error?msg=dataName为必传参数')
     return;
   }
-  //页面数据
-  let common_data = {
-    dataName:dataName,//当前激活页
-    ...res.user_session,//cookie每次需要校验
-    page_header:dataName + '添加',//标题
-    start:1,
-    q:'',
-    rule:''
-  };
 
-  res.render('./product/add.ejs', common_data);
+  //公共数据 start=1|q=''|rule=''|page_header|dataName|user_session
+  let common_data={
+    ...res.user_session,
+    ...res.params,
+    page_header:dataName+'添加',
+  }
+
+  res.render('product/add',common_data);
 });
 
-router.post('/submit',(req,res,next)=>{
-  let {title,des,auth,content,dataName} = req.body;//拆除body数据
-  let time=Date.now();//创建服务器上传时间
+router.post('/submit', function(req, res, next) {
 
+  //1.必传参数
+  let dataName = req.body.dataName;
+  if(!dataName){
+    console.log(1)
+    res.send('/admin/error?msg=dataName为必传参数')
+    return;
+  }
+
+  //2.整理公共数据|库数据
+  let {title,content,des,auth} = req.body;
+  let time = Date.now();//添加时间
+  
   //multer拆出上传图片,需要解决没有上传头像
   let auth_icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
+  
   if(auth_icon){
     fs.renameSync(
       req.files[0].path,
       req.files[0].path+pathLib.parse(req.files[0].originalname).ext
     )
   }else{
-    auth_icon = '/upload/user/noimage.png';
+    auth_icon = '/upload/noimage.png';
   }
 
-  mgd(
-    {
-      dbName:'newsapp',
-      collection:dataName
-    },
-    (collection,client)=>{
-      collection.insertOne(
-        {title,des,detail:{auth,content,auth_icon,time}}
-        ,
-        (err,result)=>{
-          if(!err && result.result.n){
-            res.send('/admin/product?dataName='+dataName+'&start=1')
-          }else{
-            res.send('/admin/error?error=1&msg='+dataName+'集合链接有误')
-          }
-          client.close();
-        }
-      )
-    }
-  );
-  
-})
 
-module.exports=router;
+  //3.写库 + 跳转
+
+  mgdb({
+    collection:dataName
+  },({collection,client})=>{
+    collection.insertOne({
+      title,des,time,detail:{auth,content,auth_icon}
+    },(err,result)=>{
+      if(!err && result.result.n){
+        let io=require('../../../bin/www');
+        io.emit('update_product', {data:result.ops[0]})
+
+        res.send('/admin/product?dataName='+dataName+'&start=1')
+      }else{
+        res.send('/admin/error?msg=集合操作错误')
+      }
+      client.close();
+    })
+  })
+
+});
+
+module.exports = router;

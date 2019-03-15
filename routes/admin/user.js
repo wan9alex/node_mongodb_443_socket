@@ -1,15 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var mgd = require('../../common/mgd');
-
+var mgdb = require('../../common/mgdb')
 router.get('/', function(req, res, next) {
   let {start,count,q,rule,dataName}=res.params;
-  
-  /* let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
-  let count = req.query.count ? req.query.count-0 : require('../../config/global').page_num;
-  let q = req.query.q||'';
-  let rule = req.query.rule||''; */
 
+  if (!dataName) {
+    res.redirect('/admin/error?msg=dataName为必传参数')
+    return;
+  }
+  
   //页面数据
   let common_data = {
     ...res.user_session,//cookie每次需要校验
@@ -18,11 +17,11 @@ router.get('/', function(req, res, next) {
     api_name:'user'
   };
 
-  mgd(
+  mgdb(
     {
       collection:dataName
     },
-    (collection,client)=>{
+    ({collection,client})=>{
       collection.find(
         q ? {nikename: eval('/'+ q +'/g') } : {},{
         projection:{
@@ -41,11 +40,12 @@ router.get('/', function(req, res, next) {
       })
     }
   );
+
 });
 
-router.use('/add', require('./user/add'));//use 指向中间件|路由|函数  get，post, all指向函数
-router.use('/del', require('./user/del'));
-router.use('/check',  require('./user/check'));
 
+router.use('/add', require('./user/add'));
+router.use('/del', require('./user/del'));
+router.use('/check', require('./user/check'));
 
 module.exports = router;

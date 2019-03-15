@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var mgd = require('../../common/mgd');
+var mgdb = require('../../common/mgdb');
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
@@ -9,10 +9,6 @@ router.get('/', function(req, res, next) {
     res.redirect('/admin/error?msg=dataName为必传单数')
     return;
   }
-  /* let start = req.query.start ? req.query.start-1 : require('../../config/global').page_start-1;//后端默认 start=0/count=3
-  let count = req.query.count ? req.query.count-0 : require('../../config/global').page_num;
-  let q = req.query.q||require('../../config/global').q;
-  let rule = req.query.rule||require('../../config/global').rule; */
 
   //页面数据
   let common_data = {
@@ -21,18 +17,17 @@ router.get('/', function(req, res, next) {
     start:start+1,
     api_name:'banner'
   };
-  mgd(
+  mgdb(
     {
       collection:dataName
     },
-    (collection,client)=>{
-
+    ({collection,client})=>{
       collection.find(
         q ? {title: eval('/'+ q +'/g') } : {},{
         projection:{
           _id:1,title:1,sub_title:1
         },
-        sort:rule ? {[rule]:-1} : {'detail.time':-1}
+        sort:rule ? {[rule]:-1} : {'time':-1}
       }).toArray((err,result)=>{
         let checkResult=result.slice(start*count,start*count+count)//提取要分页的数据
         res.data={

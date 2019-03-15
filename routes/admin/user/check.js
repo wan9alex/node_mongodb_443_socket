@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var mgd = require('../../../common/mgd')
+var mgdb = require('../../../common/mgdb')
 var uploadUrl = require('../../../config/global').upload.user;
 var pathLib = require('path');
 var fs = require('fs');
@@ -13,11 +13,6 @@ router.get('/',function(req, res, next) {
     return;
   }
   
-  // let start=req.query.start||require('../../../config/global').page_start
-  // let q=req.query.q||require('../../../config/global').q;
-  // let rule=req.query.rule||require('../../../config/global').rule;
-  // let count=req.query.count||require('../../../config/global').page_num;
-
   //页面数据
   let common_data = {
     ...res.user_session,//cookie每次需要校验
@@ -25,11 +20,11 @@ router.get('/',function(req, res, next) {
     page_header:dataName + '修改',//标题
   };
   
-  mgd({
+  mgdb({
     collection:dataName
-  },(collection,client,ObjectId)=>{
+  },({collection,client,ObjectID})=>{
     collection.find({
-      _id:ObjectId(_id)
+      _id:ObjectID(_id)
     }).toArray((err,result)=>{
       if(!err){
         res.data={
@@ -52,7 +47,7 @@ router.post('/submit',(req,res,next)=>{
   let {username,password,nikename,follow,fans,dataName,icon_old,_id,start,q,count,rule} = req.body;//拆除body数据
 
   //multer拆出上传图片,需要解决没有修改过的头像
-  console.log('1........',req.files)
+  // console.log('1........',req.files)
   let icon = req.files.length ? uploadUrl + req.files[0].filename + pathLib.parse(req.files[0].originalname).ext : '';
   if(icon){
     fs.renameSync(
@@ -64,14 +59,14 @@ router.post('/submit',(req,res,next)=>{
   }
 
 
-  mgd(
+  mgdb(
     {
       collection:dataName
     },
-    (collection,client,ObjectId)=>{
+    ({collection,client,ObjectID})=>{
       //updateOne({条件},{更新后},(err,res)=>{})
       collection.updateOne(
-        {_id:ObjectId(_id)},
+        {_id:ObjectID(_id)},
         {$set:{username,password,nikename,follow,fans,icon}},
         (err,result)=>{
           if(!err && result.result.n){

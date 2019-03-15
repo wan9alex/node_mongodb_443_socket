@@ -131,7 +131,7 @@
                                     form_data.append('follow',follow);
                                     form_data.append('fans',fans);
                                     form_data.append('dataName',"<%=dataName%>");
-                                    form_data.append('icon',new FormData($('#uploadForm')[0]));//添加流
+                                    // form_data.append('icon',new FormData($('#uploadForm')[0]));//添加流
 
                                     $.ajax({
                                       url: '/admin/user/add/submit',
@@ -143,7 +143,7 @@
                                         window.location.href=url;//前端跳转
                                       },
                                       error: function (data) {
-                                          console.log(data.status);
+                                        console.log(data.status);
                                       }
                                     });
                                   })

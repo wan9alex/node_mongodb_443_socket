@@ -1,20 +1,20 @@
 {
-  "name": "node-https",
+  "name": "step1",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www",
-    "pm2": "pm2 start ./bin/www --name='443' --watch"
+    "start": "supervisor ./bin/www",
+    "dev":"nodemon ./bin/www",
+    "pm2":"pm2 start ./bin/www --name=443"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "cookie-parser": "~1.4.3",
-    "cookie-session": "^2.0.0-beta.3",
+    "cookie-session": "^1.3.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
-    "ejs": "~2.5.7",
-    "express": "~4.16.0",
+    "ejs": "^2.5.9",
+    "express": "^4.16.4",
     "http-errors": "~1.6.2",
     "mongodb": "^3.1.13",
     "morgan": "~1.9.0",

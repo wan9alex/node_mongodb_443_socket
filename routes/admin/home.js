@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  // console.log('home1',req.session)
-  res.render('home', {
-    dataName : 'index',
+  console.log(res.user_session)
+  let data = {
     ...res.user_session,
+    active:'index',
     page_header:'首页'
-  });
+  }
+  res.render('home',data);
 });
 
 module.exports = router;

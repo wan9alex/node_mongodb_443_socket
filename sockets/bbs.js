@@ -1,25 +1,23 @@
+//在线用户socket
+var onlineUsers = {};//{用户1234:socket,xx:oo}
 
- //在线用户socket
- var onlineUsers = {};//{用户1234:socket,xx:oo}
+//当前在线人数
+var onlineCount = 0;
 
- //当前在线人数
- var onlineCount = 0;
+//当前在线用户名
+var onlineUserName = [];//['user123','uer456'];
 
- //当前在线用户名
- var onlineUserName = [];
+module.exports=(io)=>{
 
-
-module.exports=(socket,io)=>{
-
-  // io.on('connection',(socket)=>{
+  io.on('connection', (socket) => {
 
     socket.on('login', (data) => {
-      
+
       //兜库
 
       //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
       socket.name = data.username;
-  
+
       //检查在线列表，如果不在里面就加入
       if (!onlineUsers.hasOwnProperty(data.username)) {
         // console.log(socket);
@@ -28,9 +26,9 @@ module.exports=(socket,io)=>{
         //在线人数+1
         onlineCount++;
       }
-  
+
       //向所有客户端广播用户加入
-      io.emit('login', { onlineCount, username: data.username, msg: '加入聊天室' });
+      io.emit('login', { username: data.username, msg: '加入聊天室' });
       //广播在线列表更新
       io.emit('update', { onlineUserName, onlineCount });
     })
@@ -41,7 +39,7 @@ module.exports=(socket,io)=>{
         onlineUserName.splice(onlineUserName.indexOf(socket.name), 1);//删除用户名
         onlineCount--;//更新在线用户
       }
-      io.emit('logout', { username: socket.name, msg: '下线了'});
+      io.emit('logout', { username: socket.name, msg: '下线了' });
       io.emit('update', { onlineUserName, onlineCount });
     });
 
@@ -59,7 +57,6 @@ module.exports=(socket,io)=>{
       data.fromUserName = socket.name;
       onlineUsers[toUserName] && onlineUsers[toUserName].emit('private message', data);
     });
-
-  // });
-
+    
+  });
 }

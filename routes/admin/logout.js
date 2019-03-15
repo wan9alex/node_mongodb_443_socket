@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  delete req.session['username_id'];
-  res.redirect('/admin/login')
+  // req.session=null;
+  // req.session.username=undefined
+  delete req.session.username;//删除session 混淆 cookie
+  delete req.session.icon;
+
+  res.redirect('/admin/login');
 });
 
 module.exports = router;
