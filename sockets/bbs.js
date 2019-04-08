@@ -7,12 +7,28 @@ var onlineCount = 0;
 //当前在线用户名
 var onlineUserName = [];//['user123','uer456'];
 
+
+
 module.exports=(io)=>{
+
+  
 
   io.on('connection', (socket) => {
 
-    socket.on('login', (data) => {
+    var disconnect=()=>{
+      if (onlineUsers[socket.name]) {
+        delete onlineUsers[socket.name]; //删除用户
+        onlineUserName.splice(onlineUserName.indexOf(socket.name), 1);//删除用户名
+        onlineCount--;//更新在线用户
 
+        io.emit('logout', { username: socket.name, msg: '下线了' });
+        io.emit('update', { onlineUserName, onlineCount });
+        
+      }
+      
+    }
+    
+    socket.on('login', (data) => {
       //兜库
 
       //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
@@ -33,15 +49,8 @@ module.exports=(io)=>{
       io.emit('update', { onlineUserName, onlineCount });
     })
 
-    socket.on('disconnect', function () {//监听客户端下线事件
-      if (onlineUsers[socket.name]) {
-        delete onlineUsers[socket.name]; //删除用户
-        onlineUserName.splice(onlineUserName.indexOf(socket.name), 1);//删除用户名
-        onlineCount--;//更新在线用户
-      }
-      io.emit('logout', { username: socket.name, msg: '下线了' });
-      io.emit('update', { onlineUserName, onlineCount });
-    });
+    socket.on('logout', disconnect)
+    socket.on('disconnect', disconnect);
 
 
     //接受非指定

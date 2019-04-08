@@ -19,7 +19,7 @@
   <script src="./js/port.js"></script>
   <script>
     $.ajax({
-      url:port+'/api/product',
+      url:'/api/product',
       data:{dataName:'home',start:1,count:1},
       success:function(res){
         console.log('ajax_mongodb',res)
@@ -31,8 +31,8 @@
   <script src="./js/socket.io.js"></script>
   <script>
     //客户端的引入，会暴露一个io对象
-    // var socket = io('http://localhost:3000');//链接服务器
     var socket = io(port);//链接服务器
+    // var socket = io(port);//链接服务器
 
     //跨端的订阅
     socket.on('update_product',(res)=>{

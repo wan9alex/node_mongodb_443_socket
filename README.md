@@ -3,7 +3,7 @@
 
 ### 1. git clone 地址
 ### 2. npm i
-### 3. 修改: config/index.js 
+### 3. 修改: config/server.js 
 ```
 {
   local:{

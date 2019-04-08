@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
       collection.find(
         q ? {title: eval('/'+ q +'/g') } : {},{
         projection:{
-          _id:1,title:1,sub_title:1
+          _id:1,title:1,sub_title:1,banner:1
         },
         sort:rule ? {[rule]:-1} : {'time':-1}
       }).toArray((err,result)=>{
@@ -25,6 +25,7 @@ router.get('/', function(req, res, next) {
           page_count: Math.ceil(result.length / count),//计算总页数
           page_data: checkResult,
         }
+        console.log(data);
         res.send(data);
         client.close();
       })

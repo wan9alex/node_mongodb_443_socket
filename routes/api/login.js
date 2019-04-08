@@ -18,6 +18,7 @@ router.post('/', function(req, res, next) {
         if(!err && result.length>0){
           //种cookie , 留session
           req.session['username']=result[0].username
+          console.log(res.session)
           res.send({error:0,msg:'登录成功',data:result[0]});
         }else{
           res.send({error:1,msg:'登录失败,用户或者密码有误'})

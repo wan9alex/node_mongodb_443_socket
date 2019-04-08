@@ -91,10 +91,13 @@ app.use('/proxy/top250', require('./routes/proxy/top250'));
 app.use('/proxy/coming', require('./routes/proxy/coming_soon'));
 app.use('/proxy/theaters', require('./routes/proxy/in_theaters'));
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -106,10 +109,14 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   if(req.url.indexOf('/api') !== -1){
     res.send({error:1,msg:'错误的接口和请求方式'})
-  }else{
-    res.render('./feedback/app_error');
+  }else if(req.url.indexOf('/admin') !== -1){
+    res.render('./feedback/error',{msg:'不存在的后台地址'});
+  }else {
+    res.sendFile(path.join(__dirname, 'public','template', 'index.html'));
   }
   
 });
+
+
 
 module.exports = app;
